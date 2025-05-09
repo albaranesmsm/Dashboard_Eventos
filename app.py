@@ -1,13 +1,21 @@
 import streamlit as st
 import pandas as pd
-from .utils import (
-   cargar_datos,
-   grafico_eventos_provincia_poblacion,
-   grafico_volumen_estimado,
-   grafico_equipos_desplegados,
-   grafico_evolucion_entregas_retiradas,
-   grafico_eventos_por_plataforma
-)
+import sys
+import os
+# Agregamos el directorio actual al PATH
+sys.path.append(os.path.dirname(__file__))
+# Importar funciones de utils.py
+try:
+   from utils import (
+       cargar_datos,
+       grafico_eventos_provincia_poblacion,
+       grafico_volumen_estimado,
+       grafico_equipos_desplegados,
+       grafico_evolucion_entregas_retiradas,
+       grafico_eventos_por_plataforma
+   )
+except ImportError as e:
+   st.error(f"No se pudo importar utils.py: {e}")
 # =======================
 # Configuración de página
 # =======================
