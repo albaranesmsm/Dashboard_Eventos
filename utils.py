@@ -30,12 +30,12 @@ def grafico_eventos_provincia_poblacion(data):
    """
    Genera un gráfico de barras mostrando los eventos por provincia y población.
    """
-   if 'Provincia' not in data.columns or 'Poblacion' not in data.columns:
-       st.error("Las columnas 'Provincia' y/o 'Poblacion' no existen en el archivo.")
+   if 'Provincia' not in data.columns or 'Población Evento' not in data.columns:
+       st.error("Las columnas 'Provincia' y/o 'Población Evento' no existen en el archivo.")
        return
    plt.figure(figsize=(12, 6))
-   eventos_provincia = data.groupby(['Provincia', 'Poblacion']).size().reset_index(name='Cantidad')
-   sns.barplot(x='Provincia', y='Cantidad', hue='Poblacion', data=eventos_provincia, palette='Set2')
+   eventos_provincia = data.groupby(['Provincia', 'Población Evento']).size().reset_index(name='Cantidad')
+   sns.barplot(x='Provincia', y='Cantidad', hue='Población Evento', data=eventos_provincia, palette='Set2')
    plt.title('Eventos por Provincia y Población')
    plt.xticks(rotation=45)
    plt.tight_layout()
@@ -48,11 +48,11 @@ def grafico_volumen_estimado(data):
    """
    Genera un gráfico de barras del volumen estimado por evento.
    """
-   if 'Volumen Estimado' not in data.columns or 'Evento' not in data.columns:
-       st.error("Las columnas 'Volumen Estimado' y/o 'Evento' no existen en el archivo.")
+   if 'Volumen estimado (litros) Evento' not in data.columns or 'Nombre Evento' not in data.columns:
+       st.error("Las columnas 'Volumen estimado (litros) Evento' y/o 'Nombre Evento' no existen en el archivo.")
        return
    plt.figure(figsize=(12, 6))
-   sns.barplot(x='Evento', y='Volumen Estimado', data=data, palette='Blues_r')
+   sns.barplot(x='Nombre Evento', y='Volumen estimado (litros) Evento', data=data, palette='Blues_r')
    plt.title('Volumen Estimado por Evento')
    plt.xticks(rotation=45)
    plt.tight_layout()
@@ -65,11 +65,11 @@ def grafico_equipos_desplegados(data):
    """
    Genera un gráfico de barras mostrando la cantidad de equipos desplegados por evento.
    """
-   if 'Evento' not in data.columns or 'Equipos Desplegados' not in data.columns:
-       st.error("Las columnas 'Evento' y/o 'Equipos Desplegados' no existen en el archivo.")
+   if 'Nombre Evento' not in data.columns or 'Cantidad Total de Botelleros' not in data.columns:
+       st.error("Las columnas 'Nombre Evento' y/o 'Cantidad Total de Botelleros' no existen en el archivo.")
        return
    plt.figure(figsize=(12, 6))
-   sns.barplot(x='Evento', y='Equipos Desplegados', data=data, palette='Greens_r')
+   sns.barplot(x='Nombre Evento', y='Cantidad Total de Botelleros', data=data, palette='Greens_r')
    plt.title('Cantidad de Equipos Desplegados por Evento')
    plt.xticks(rotation=45)
    plt.tight_layout()
@@ -82,15 +82,15 @@ def grafico_evolucion_entregas_retiradas(data):
    """
    Genera un gráfico de línea mostrando la evolución de entregas y retiradas a lo largo del tiempo.
    """
-   if 'Fecha' not in data.columns or 'Entregas' not in data.columns or 'Retiradas' not in data.columns:
-       st.error("Las columnas 'Fecha', 'Entregas' y/o 'Retiradas' no existen en el archivo.")
+   if 'Fecha Entrega Evento' not in data.columns or 'Cantidad Total de Mostradores' not in data.columns or 'Cantidad Total de Vitrinas' not in data.columns:
+       st.error("Las columnas 'Fecha Entrega Evento', 'Cantidad Total de Mostradores' y/o 'Cantidad Total de Vitrinas' no existen en el archivo.")
        return
-   data['Fecha'] = pd.to_datetime(data['Fecha'], errors='coerce')
-   data = data.sort_values('Fecha')
+   data['Fecha Entrega Evento'] = pd.to_datetime(data['Fecha Entrega Evento'], errors='coerce')
+   data = data.sort_values('Fecha Entrega Evento')
    plt.figure(figsize=(12, 6))
-   plt.plot(data['Fecha'], data['Entregas'], label='Entregas', marker='o')
-   plt.plot(data['Fecha'], data['Retiradas'], label='Retiradas', marker='o')
-   plt.title('Evolución de Entregas y Retiradas en el Tiempo')
+   plt.plot(data['Fecha Entrega Evento'], data['Cantidad Total de Mostradores'], label='Mostradores', marker='o')
+   plt.plot(data['Fecha Entrega Evento'], data['Cantidad Total de Vitrinas'], label='Vitrinas', marker='o')
+   plt.title('Evolución de Entregas de Mostradores y Vitrinas en el Tiempo')
    plt.xlabel('Fecha')
    plt.ylabel('Cantidad')
    plt.legend()
