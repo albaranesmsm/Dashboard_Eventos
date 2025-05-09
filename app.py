@@ -1,49 +1,63 @@
-import os
 import streamlit as st
+import pandas as pd
 from utils import (
    cargar_datos,
    grafico_eventos_provincia_poblacion,
-   grafico_volumen_eventos,
-   grafico_cantidad_equipos,
+   grafico_volumen_estimado,
+   grafico_equipos_desplegados,
    grafico_evolucion_entregas_retiradas,
-   grafico_plataforma_logistica
+   grafico_eventos_por_plataforma
 )
-# === Forzar instalación de dependencias al iniciar ===
-os.system('pip install --use-feature=fast-deps -r requirements.txt')
-# === Configuración de la aplicación ===
-st.title("Dashboard de Eventos Logísticos")
-st.markdown("Visualización de datos de eventos logísticos de la compañía.")
-# === Subida de archivo CSV ===
-archivo = st.file_uploader("Sube el archivo CSV de eventos", type=["csv"])
+# =======================
+# Configuración de página
+# =======================
+st.set_page_config(page_title="Dashboard de Eventos", layout="wide")
+st.title("Dashboard de Eventos")
+st.write("Sube un archivo CSV para visualizar los datos:")
+# =======================
+# Carga del archivo CSV
+# =======================
+archivo = st.file_uploader("Subir CSV", type=["csv"])
 if archivo:
-   data = cargar_datos(archivo)
-   st.subheader("Vista Previa de los Datos")
-   st.write(data.head())
-   # === Opciones de visualización ===
-   st.sidebar.title("Visualizaciones Disponibles")
-   opciones = [
-       "Eventos por Provincia y Población",
-       "Volumen Estimado por Evento",
-       "Cantidad de Equipos por Evento",
-       "Evolución de Entregas y Retiradas",
-       "Eventos por Plataforma Logística"
-   ]
-   seleccion = st.sidebar.selectbox("Selecciona una visualización", opciones)
-   # === Mostrar gráficos seleccionados ===
-   if seleccion == "Eventos por Provincia y Población":
-       st.subheader("Top 10 Provincias con más Eventos")
-       grafico_eventos_provincia_poblacion(data)
-   elif seleccion == "Volumen Estimado por Evento":
-       st.subheader("Top 10 Eventos por Volumen Estimado")
-       grafico_volumen_eventos(data)
-   elif seleccion == "Cantidad de Equipos por Evento":
-       st.subheader("Top 10 Eventos por Cantidad de Equipos")
-       grafico_cantidad_equipos(data)
-   elif seleccion == "Evolución de Entregas y Retiradas":
-       st.subheader("Evolución de Entregas y Retiradas")
-       grafico_evolucion_entregas_retiradas(data)
-   elif seleccion == "Eventos por Plataforma Logística":
-       st.subheader("Eventos por Plataforma Logística")
-       grafico_plataforma_logistica(data)
+   # Intentar cargar los datos
+   try:
+       data = cargar_datos(archivo)
+       if data is None or data.empty:
+           st.error("El archivo CSV no se ha cargado correctamente o está vacío.")
+       else:
+           # Mostrar vista previa
+           st.subheader("Vista Previa de los Datos")
+           st.write(data.head())
+           st.write("Columnas encontradas:", list(data.columns))
+           # =======================
+           # Renderización de gráficos
+           # =======================
+           st.subheader("Eventos por Provincia y Población")
+           try:
+               grafico_eventos_provincia_poblacion(data)
+           except Exception as e:
+               st.error(f"Error en gráfico 'Eventos por provincia y población': {e}")
+           st.subheader("Volumen Estimado por Evento")
+           try:
+               grafico_volumen_estimado(data)
+           except Exception as e:
+               st.error(f"Error en gráfico 'Volumen estimado por evento': {e}")
+           st.subheader("Cantidad de Equipos Desplegados por Evento")
+           try:
+               grafico_equipos_desplegados(data)
+           except Exception as e:
+               st.error(f"Error en gráfico 'Equipos desplegados por evento': {e}")
+           st.subheader("Evolución de Entregas y Retiradas a lo Largo del Tiempo")
+           try:
+               grafico_evolucion_entregas_retiradas(data)
+           except Exception as e:
+               st.error(f"Error en gráfico 'Evolución de entregas y retiradas': {e}")
+           st.subheader("Eventos por Plataforma Logística")
+           try:
+               grafico_eventos_por_plataforma(data)
+           except Exception as e:
+               st.error(f"Error en gráfico 'Eventos por plataforma logística': {e}")
+   except Exception as e:
+       st.error(f"No se pudo cargar el archivo CSV: {e}")
 else:
-   st.warning("Por favor, sube un archivo CSV para visualizar los gráficos.")
+   st.info("Esperando un archivo CSV...")
