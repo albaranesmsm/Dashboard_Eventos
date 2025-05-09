@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import sys
 import os
+# 🚀 Configuración de la página (ESTO VA PRIMERO SIEMPRE)
+st.set_page_config(page_title="Dashboard de Eventos", layout="wide")
 # Agregamos el directorio actual al PATH
 sys.path.append(os.path.dirname(__file__))
 # Importar funciones de utils.py
@@ -9,7 +11,7 @@ try:
    from utils import (
        cargar_datos,
        grafico_eventos_provincia_poblacion,
-       grafico_volumen_estimado,
+       grafico_volumen_estimado,  # Verifica que esté en utils.py
        grafico_equipos_desplegados,
        grafico_evolucion_entregas_retiradas,
        grafico_eventos_por_plataforma
@@ -17,14 +19,10 @@ try:
 except ImportError as e:
    st.error(f"No se pudo importar utils.py: {e}")
 # =======================
-# Configuración de página
-# =======================
-st.set_page_config(page_title="Dashboard de Eventos", layout="wide")
-st.title("Dashboard de Eventos")
-st.write("Sube un archivo CSV para visualizar los datos:")
-# =======================
 # Carga del archivo CSV
 # =======================
+st.title("Dashboard de Eventos")
+st.write("Sube un archivo CSV para visualizar los datos:")
 archivo = st.file_uploader("Subir CSV", type=["csv"])
 if archivo:
    # Intentar cargar los datos
