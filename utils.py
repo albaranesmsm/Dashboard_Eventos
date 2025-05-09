@@ -17,7 +17,7 @@ def cargar_datos(archivo_csv):
        encoding = result['encoding']
        # Volver a leer el archivo con la codificación detectada
        archivo_csv.seek(0)  # Volver al principio del archivo después de la lectura
-       data = pd.read_csv(archivo_csv, encoding=encoding, error_bad_lines=False, delimiter=';')  # Usar ';' como delimitador
+       data = pd.read_csv(archivo_csv, encoding=encoding, on_bad_lines='skip', delimiter=';')  # Usar ';' como delimitador
        data.columns = data.columns.str.strip()  # Eliminar espacios en los nombres de columnas
        return data
    except Exception as e:
