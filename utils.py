@@ -23,6 +23,9 @@ def grafico_eventos_provincia_poblacion(data):
    """
    Genera un gráfico de barras mostrando los eventos por provincia y población.
    """
+   if 'Provincia' not in data.columns or 'Poblacion' not in data.columns:
+       st.error("Las columnas 'Provincia' y/o 'Poblacion' no existen en el archivo.")
+       return
    plt.figure(figsize=(12, 6))
    eventos_provincia = data.groupby(['Provincia', 'Poblacion']).size().reset_index(name='Cantidad')
    sns.barplot(x='Provincia', y='Cantidad', hue='Poblacion', data=eventos_provincia, palette='Set2')
@@ -106,3 +109,19 @@ def grafico_eventos_por_plataforma(data):
    plt.tight_layout()
    st.pyplot(plt)
    plt.clf()
+# ============================
+# Función principal para cargar y mostrar gráficos
+# ============================
+def mostrar_graficos():
+   archivo_csv = st.file_uploader("Cargar archivo CSV", type="csv")
+   if archivo_csv is not None:
+       data = cargar_datos(archivo_csv)
+       if data is not None:
+           # Mostrar gráficos
+           grafico_eventos_provincia_poblacion(data)
+           grafico_volumen_estimado(data)
+           grafico_equipos_desplegados(data)
+           grafico_evolucion_entregas_retiradas(data)
+           grafico_eventos_por_plataforma(data)
+if __name__ == "__main__":
+   mostrar_graficos()
