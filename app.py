@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils import (
+from .utils import (
    cargar_datos,
    grafico_eventos_provincia_poblacion,
    grafico_volumen_estimado,
